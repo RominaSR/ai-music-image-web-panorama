@@ -13,10 +13,10 @@ body, html {
 .image-container {
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* Change to flex-start to see the left side initially */
     align-items: center;
     touch-action: none;
 }

@@ -4,6 +4,20 @@ let isDragging = false;
 let startX;
 let scrollLeft;
 
+// Música de ambiente
+let backgroundMusic = document.getElementById('background-music');
+let playButton = document.getElementById('play-music');
+
+playButton.addEventListener('click', () => {
+    if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        playButton.textContent = "Pause Music";
+    } else {
+        backgroundMusic.pause();
+        playButton.textContent = "Play Music";
+    }
+});
+
 function centerImage() {
     const centerX = (image.clientWidth - container.clientWidth) / 2;
     container.scrollLeft = centerX;
