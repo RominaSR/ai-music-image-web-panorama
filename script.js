@@ -31,7 +31,7 @@ container.addEventListener('mouseup', () => {
 });
 
 container.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
+    if(!isDragging) return;
     e.preventDefault();
     const x = e.pageX - container.offsetLeft;
     const walk = (x - startX) * 3; //scroll-fast
@@ -49,7 +49,7 @@ container.addEventListener('touchend', () => {
 });
 
 container.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
+    if(!isDragging) return;
     e.preventDefault();
     const x = e.touches[0].pageX - container.offsetLeft;
     const walk = (x - startX) * 3; //scroll-fast
