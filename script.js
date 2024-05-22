@@ -10,10 +10,11 @@ function centerImage() {
 }
 
 window.addEventListener('load', () => {
-    // Esperar un momento para que el navegador renderice la imagen y luego centrarla
-    setTimeout(() => {
+    // Asegurarse de que la imagen esté completamente cargada
+    image.addEventListener('load', centerImage);
+    if (image.complete) {
         centerImage();
-    }, 100);
+    }
 });
 
 container.addEventListener('mousedown', (e) => {
@@ -31,7 +32,7 @@ container.addEventListener('mouseup', () => {
 });
 
 container.addEventListener('mousemove', (e) => {
-    if(!isDragging) return;
+    if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - container.offsetLeft;
     const walk = (x - startX) * 3; //scroll-fast
@@ -49,7 +50,7 @@ container.addEventListener('touchend', () => {
 });
 
 container.addEventListener('touchmove', (e) => {
-    if(!isDragging) return;
+    if (!isDragging) return;
     e.preventDefault();
     const x = e.touches[0].pageX - container.offsetLeft;
     const walk = (x - startX) * 3; //scroll-fast
