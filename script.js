@@ -17,18 +17,18 @@ function playMusic() {
         playMessage.style.display = 'none'; // Ocultar el mensaje si la reproducción es exitosa
     }).catch(error => {
         console.log('Reproducción automática bloqueada:', error);
-        playMessage.style.display = 'block'; // Mostrar el mensaje si la reproducción está bloqueada
     });
 
     // Iniciar los otros sonidos
     leftSound.play();
     centerSound.play();
     rightSound.play();
+
+    // Ajustar el volumen de los sonidos según la posición del scroll
+    container.addEventListener('scroll', adjustSoundVolumes);
 }
 
 window.addEventListener('load', () => {
-    playMusic();
-
     function centerImage() {
         const centerX = (image.clientWidth - container.clientWidth) / 2;
         container.scrollLeft = centerX;
@@ -39,9 +39,14 @@ window.addEventListener('load', () => {
     if (image.complete) {
         centerImage();
     }
+});
 
-    // Ajustar el volumen de los sonidos según la posición del scroll
-    container.addEventListener('scroll', adjustSoundVolumes);
+// Permitir que el usuario inicie la música manualmente
+playMessage.addEventListener('click', () => {
+    playMessage.style.display = 'none';
+    if (backgroundMusic.paused) {
+        playMusic();
+    }
 });
 
 function adjustSoundVolumes() {
@@ -52,43 +57,26 @@ function adjustSoundVolumes() {
     // Calcular los tercios
     let thirdWidth = imageWidth / 3;
 
+    // Calcular la posición central de la vista
+    let viewCenter = scrollPosition + containerWidth / 2;
+
     // Ajustar volumen del sonido izquierdo
-    if (scrollPosition < thirdWidth) {
-        leftSound.volume = 1 - scrollPosition / thirdWidth;
-        centerSound.volume = scrollPosition / thirdWidth;
-    } else {
+    if (viewCenter < thirdWidth) {
+        leftSound.volume = 1;
+        centerSound.volume = 0;
+        rightSound.volume = 0;
+    } else if (viewCenter >= thirdWidth && viewCenter < 2 * thirdWidth) {
+        let relativePosition = (viewCenter - thirdWidth) / thirdWidth;
+        leftSound.volume = 1 - relativePosition;
+        centerSound.volume = relativePosition;
+        rightSound.volume = 0;
+    } else if (viewCenter >= 2 * thirdWidth) {
+        let relativePosition = (viewCenter - 2 * thirdWidth) / thirdWidth;
+        centerSound.volume = 1 - relativePosition;
+        rightSound.volume = relativePosition;
         leftSound.volume = 0;
     }
-
-    // Ajustar volumen del sonido central
-    if (scrollPosition >= thirdWidth && scrollPosition < 2 * thirdWidth) {
-        centerSound.volume = 1 - Math.abs(scrollPosition - thirdWidth) / thirdWidth;
-        if (scrollPosition < 1.5 * thirdWidth) {
-            leftSound.volume = (1.5 * thirdWidth - scrollPosition) / thirdWidth;
-        } else {
-            rightSound.volume = (scrollPosition - 1.5 * thirdWidth) / thirdWidth;
-        }
-    } else if (scrollPosition < thirdWidth) {
-        centerSound.volume = scrollPosition / thirdWidth;
-    } else if (scrollPosition >= 2 * thirdWidth) {
-        centerSound.volume = (2 * thirdWidth - scrollPosition) / thirdWidth;
-    }
-
-    // Ajustar volumen del sonido derecho
-    if (scrollPosition >= 2 * thirdWidth) {
-        rightSound.volume = (scrollPosition - 2 * thirdWidth) / thirdWidth;
-        centerSound.volume = 1 - (scrollPosition - 2 * thirdWidth) / thirdWidth;
-    } else {
-        rightSound.volume = 0;
-    }
 }
-
-// Permitir que el usuario inicie la música manualmente
-document.body.addEventListener('click', () => {
-    if (backgroundMusic.paused) {
-        playMusic();
-    }
-});
 
 container.addEventListener('mousedown', (e) => {
     isDragging = true;

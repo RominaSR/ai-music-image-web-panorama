@@ -28,3 +28,7 @@ body, html {
     max-width: none;
     max-height: none;
 }
+
+#play-message {
+    cursor: pointer;
+}
