@@ -6,28 +6,37 @@ let scrollLeft;
 
 // Música de ambiente
 let backgroundMusic = document.getElementById('background-music');
-let playButton = document.getElementById('play-music');
+let playMessage = document.getElementById('play-message');
 
-playButton.addEventListener('click', () => {
-    if (backgroundMusic.paused) {
-        backgroundMusic.play();
-        playButton.textContent = "Pause Music";
-    } else {
-        backgroundMusic.pause();
-        playButton.textContent = "Play Music";
-    }
-});
-
-function centerImage() {
-    const centerX = (image.clientWidth - container.clientWidth) / 2;
-    container.scrollLeft = centerX;
+// Intentar reproducir la música automáticamente
+function playMusic() {
+    backgroundMusic.play().then(() => {
+        playMessage.style.display = 'none'; // Ocultar el mensaje si la reproducción es exitosa
+    }).catch(error => {
+        console.log('Reproducción automática bloqueada:', error);
+        playMessage.style.display = 'block'; // Mostrar el mensaje si la reproducción está bloqueada
+    });
 }
 
 window.addEventListener('load', () => {
+    playMusic();
+
+    function centerImage() {
+        const centerX = (image.clientWidth - container.clientWidth) / 2;
+        container.scrollLeft = centerX;
+    }
+
     // Asegurarse de que la imagen esté completamente cargada
     image.addEventListener('load', centerImage);
     if (image.complete) {
         centerImage();
+    }
+});
+
+// Permitir que el usuario inicie la música manualmente
+document.body.addEventListener('click', () => {
+    if (backgroundMusic.paused) {
+        playMusic();
     }
 });
 

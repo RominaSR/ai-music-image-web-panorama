@@ -16,7 +16,7 @@ body, html {
     overflow: hidden;
     position: relative;
     display: flex;
-    justify-content: flex-start; /* Change to flex-start to see the left side initially */
+    justify-content: flex-start; /* Asegurarse de ver el extremo izquierdo inicialmente */
     align-items: center;
     touch-action: none;
 }
