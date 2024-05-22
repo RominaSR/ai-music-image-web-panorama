@@ -5,11 +5,15 @@ let startX;
 let scrollLeft;
 
 function centerImage() {
-    container.scrollLeft = (image.clientWidth - container.clientWidth) / 2;
+    const centerX = (image.clientWidth - container.clientWidth) / 2;
+    container.scrollLeft = centerX;
 }
 
 window.addEventListener('load', () => {
-    centerImage();
+    // Esperar un momento para que el navegador renderice la imagen y luego centrarla
+    setTimeout(() => {
+        centerImage();
+    }, 100);
 });
 
 container.addEventListener('mousedown', (e) => {
@@ -27,7 +31,7 @@ container.addEventListener('mouseup', () => {
 });
 
 container.addEventListener('mousemove', (e) => {
-    if(!isDragging) return;
+    if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - container.offsetLeft;
     const walk = (x - startX) * 3; //scroll-fast
@@ -45,14 +49,14 @@ container.addEventListener('touchend', () => {
 });
 
 container.addEventListener('touchmove', (e) => {
-    if(!isDragging) return;
+    if (!isDragging) return;
     e.preventDefault();
     const x = e.touches[0].pageX - container.offsetLeft;
     const walk = (x - startX) * 3; //scroll-fast
     container.scrollLeft = scrollLeft - walk;
 });
 
-// Prevent scrolling beyond the edges
+// Prevenir desplazamiento más allá de los bordes
 container.addEventListener('scroll', () => {
     if (container.scrollLeft <= 0) {
         container.scrollLeft = 0;
