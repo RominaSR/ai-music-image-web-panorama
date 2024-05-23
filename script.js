@@ -129,3 +129,5 @@ container.addEventListener('scroll', () => {
         container.scrollLeft = image.clientWidth - container.clientWidth;
     }
 });
+
+container.addEventListener('scroll', adjustSoundVolumes);
