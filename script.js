@@ -62,6 +62,7 @@ function adjustSoundVolumes() {
     let viewCenter = scrollPosition + containerWidth / 2;
 
     // Mostrar la posición del desplazamiento
+    scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}, View Center: ${viewCenter}`;
 
     // Ajustar volumen del sonido izquierdo
