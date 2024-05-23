@@ -52,43 +52,35 @@ playMessage.addEventListener('click', () => {
 
 function adjustSoundVolumes() {
     let scrollPosition = container.scrollLeft;
-    let containerWidth = container.clientWidth;
-    let imageWidth = image.clientWidth;
 
     // Mostrar la posición del desplazamiento
     scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
-    // Volúmenes iniciales
-    let leftVolume = 0;
-    let centerVolume = 1;
-    let rightVolume = 0;
-
-    // Ajustar volumen del sonido central y izquierdo
+    // Ajustar volumen del sonido izquierdo
     if (scrollPosition <= 679.6) {
-        leftVolume = 1;
-        centerVolume = 0;
+        leftSound.volume = 1;
+        centerSound.volume = 0;
     } else if (scrollPosition <= 749.6) {
         let factor = (scrollPosition - 679.6) / (749.6 - 679.6);
-        leftVolume = 1 - factor;
-        centerVolume = factor;
-    } else if (scrollPosition >= 749.6 && scrollPosition <= 1289) {
-        centerVolume = 1;
-        leftVolume = 0;
-        rightVolume = 0;
-    } else if (scrollPosition >= 1289 && scrollPosition <= 1359) {
-        let factor = (scrollPosition - 1289) / (1359 - 1289);
-        centerVolume = 1 - factor;
-        rightVolume = factor;
-    } else if (scrollPosition > 1359) {
-        centerVolume = 0;
-        rightVolume = 1;
+        leftSound.volume = 1 - factor;
+        centerSound.volume = factor;
+    } else {
+        centerSound.volume = 1;
+        leftSound.volume = 0;
     }
 
-    // Aplicar volúmenes
-    leftSound.volume = Math.min(Math.max(leftVolume, 0), 1);
-    centerSound.volume = Math.min(Math.max(centerVolume, 0), 1);
-    rightSound.volume = Math.min(Math.max(rightVolume, 0), 1);
+    // Ajustar volumen del sonido derecho
+    if (scrollPosition >= 1289 && scrollPosition <= 1359) {
+        let factor = (scrollPosition - 1289) / (1359 - 1289);
+        centerSound.volume = 1 - factor;
+        rightSound.volume = factor;
+    } else if (scrollPosition > 1359) {
+        centerSound.volume = 0;
+        rightSound.volume = 1;
+    } else {
+        rightSound.volume = 0;
+    }
 }
 
 container.addEventListener('mousedown', (e) => {
