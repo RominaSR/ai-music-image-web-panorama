@@ -20,23 +20,16 @@ rightSound.volume = 0;
 // Play music function
 function playMusic() {
     // Play all sounds initially to avoid blocking issues
-    backgroundMusic.play().catch(error => {
-        console.log('Reproducción automática bloqueada:', error);
+    Promise.all([
+        backgroundMusic.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
+        leftSound.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
+        centerSound.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
+        rightSound.play().catch(error => console.log('Reproducción automática bloqueada:', error))
+    ]).then(() => {
+        playMessage.style.display = 'none';
+        container.addEventListener('scroll', adjustSoundVolumes);
+        adjustSoundVolumes(); // Call once to set the initial volumes
     });
-
-    leftSound.play().catch(error => {
-        console.log('Reproducción automática bloqueada:', error);
-    });
-
-    centerSound.play().catch(error => {
-        console.log('Reproducción automática bloqueada:', error);
-    });
-
-    rightSound.play().catch(error => {
-        console.log('Reproducción automática bloqueada:', error);
-    });
-
-    container.addEventListener('scroll', adjustSoundVolumes);
 }
 
 // Center the image on load
