@@ -60,30 +60,38 @@ function adjustSoundVolumes() {
     scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
-    // Update volumes based on scroll position
+    // Crossfade logic
+    let leftVolume = 0;
+    let centerVolume = 1;
+    let rightVolume = 0;
+
     if (scrollPosition <= 679.6) {
-        leftSound.volume = 1;
-        centerSound.volume = 0;
-        rightSound.volume = 0;
+        leftVolume = 1;
+        centerVolume = 0;
+        rightVolume = 0;
     } else if (scrollPosition <= 749.6) {
         let factor = (scrollPosition - 679.6) / (749.6 - 679.6);
-        leftSound.volume = 1 - factor;
-        centerSound.volume = factor;
-        rightSound.volume = 0;
+        leftVolume = 1 - factor;
+        centerVolume = factor;
+        rightVolume = 0;
     } else if (scrollPosition <= 1289) {
-        leftSound.volume = 0;
-        centerSound.volume = 1;
-        rightSound.volume = 0;
+        leftVolume = 0;
+        centerVolume = 1;
+        rightVolume = 0;
     } else if (scrollPosition <= 1359) {
         let factor = (scrollPosition - 1289) / (1359 - 1289);
-        leftSound.volume = 0;
-        centerSound.volume = 1 - factor;
-        rightSound.volume = factor;
+        leftVolume = 0;
+        centerVolume = 1 - factor;
+        rightVolume = factor;
     } else if (scrollPosition > 1359) {
-        leftSound.volume = 0;
-        centerSound.volume = 0;
-        rightSound.volume = 1;
+        leftVolume = 0;
+        centerVolume = 0;
+        rightVolume = 1;
     }
+
+    leftSound.volume = leftVolume;
+    centerSound.volume = centerVolume;
+    rightSound.volume = rightVolume;
 
     // Log current volumes
     console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`);
