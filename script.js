@@ -5,15 +5,17 @@ let isDragging = false;
 let startX;
 let scrollLeft;
 
-// Audio elements and Web Audio API context
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// Audio elements
 let backgroundMusic = document.getElementById('background-music');
 let leftSound = document.getElementById('left-sound');
 let centerSound = document.getElementById('center-sound');
 let rightSound = document.getElementById('right-sound');
 let playMessage = document.getElementById('play-message');
 
-// Create gain nodes
+// Create AudioContext
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+// Create GainNodes
 let leftGain = audioContext.createGain();
 let centerGain = audioContext.createGain();
 let rightGain = audioContext.createGain();
@@ -23,14 +25,16 @@ leftGain.gain.value = 0;
 centerGain.gain.value = 1;
 rightGain.gain.value = 0;
 
-// Connect audio elements to gain nodes and audio context
-let leftSource = audioContext.createMediaElementSource(leftSound);
-let centerSource = audioContext.createMediaElementSource(centerSound);
-let rightSource = audioContext.createMediaElementSource(rightSound);
+// Function to connect audio elements to GainNodes
+function connectAudioElementToGainNode(audioElement, gainNode) {
+    let source = audioContext.createMediaElementSource(audioElement);
+    source.connect(gainNode).connect(audioContext.destination);
+}
 
-leftSource.connect(leftGain).connect(audioContext.destination);
-centerSource.connect(centerGain).connect(audioContext.destination);
-rightSource.connect(rightGain).connect(audioContext.destination);
+// Connect audio elements to GainNodes
+connectAudioElementToGainNode(leftSound, leftGain);
+connectAudioElementToGainNode(centerSound, centerGain);
+connectAudioElementToGainNode(rightSound, rightGain);
 
 // Play music function
 function playMusic() {
