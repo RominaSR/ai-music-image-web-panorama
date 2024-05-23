@@ -5,17 +5,32 @@ let isDragging = false;
 let startX;
 let scrollLeft;
 
-// Audio elements
+// Audio elements and Web Audio API context
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let backgroundMusic = document.getElementById('background-music');
 let leftSound = document.getElementById('left-sound');
 let centerSound = document.getElementById('center-sound');
 let rightSound = document.getElementById('right-sound');
 let playMessage = document.getElementById('play-message');
 
-// Set initial volumes
-leftSound.volume = 0;
-centerSound.volume = 1;
-rightSound.volume = 0;
+// Create gain nodes
+let leftGain = audioContext.createGain();
+let centerGain = audioContext.createGain();
+let rightGain = audioContext.createGain();
+
+// Set initial gain values
+leftGain.gain.value = 0;
+centerGain.gain.value = 1;
+rightGain.gain.value = 0;
+
+// Connect audio elements to gain nodes and audio context
+let leftSource = audioContext.createMediaElementSource(leftSound);
+let centerSource = audioContext.createMediaElementSource(centerSound);
+let rightSource = audioContext.createMediaElementSource(rightSound);
+
+leftSource.connect(leftGain).connect(audioContext.destination);
+centerSource.connect(centerGain).connect(audioContext.destination);
+rightSource.connect(rightGain).connect(audioContext.destination);
 
 // Play music function
 function playMusic() {
@@ -61,11 +76,12 @@ function adjustSoundVolumes() {
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
     let leftVolume = 0;
-    let centerVolume = 0;
+    let centerVolume = 1;
     let rightVolume = 0;
 
     if (scrollPosition <= 679.6) {
         leftVolume = 1;
+        centerVolume = 0;
     } else if (scrollPosition <= 749.6) {
         let factor = (scrollPosition - 679.6) / (749.6 - 679.6);
         leftVolume = 1 - factor;
@@ -80,10 +96,12 @@ function adjustSoundVolumes() {
         rightVolume = 1;
     }
 
+    // Update gain values
+    leftGain.gain.setValueAtTime(leftVolume, audioContext.currentTime);
+    centerGain.gain.setValueAtTime(centerVolume, audioContext.currentTime);
+    rightGain.gain.setValueAtTime(rightVolume, audioContext.currentTime);
+
     console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftVolume}, centerVolume: ${centerVolume}, rightVolume: ${rightVolume}`);
-    leftSound.volume = leftVolume;
-    centerSound.volume = centerVolume;
-    rightSound.volume = rightVolume;
 }
 
 container.addEventListener('mousedown', (e) => {
