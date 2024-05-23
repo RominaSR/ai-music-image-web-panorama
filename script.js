@@ -20,6 +20,11 @@ leftSound.volume = 0; // Mute left sound
 centerSound.volume = 1; // Normal volume for center sound
 rightSound.volume = 0; // Mute right sound
 
+// Function to map a value from one range to another
+function mapRange(value, inMin, inMax, outMin, outMax) {
+    return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
+
 // Function to update volumes based on scroll position
 function updateVolume() {
     let scrollPosition = container.scrollLeft;
@@ -28,25 +33,28 @@ function updateVolume() {
     scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
+    // Log the current scroll position for debugging
+    console.log(`Scroll Position: ${scrollPosition}`);
+
     // Update volume for each audio element based on scroll position
     if (scrollPosition <= 679.6) {
         leftSound.volume = 1;
         centerSound.volume = 0;
         rightSound.volume = 0;
     } else if (scrollPosition > 679.6 && scrollPosition <= 749.6) {
-        let factor = (scrollPosition - 679.6) / (749.6 - 679.6);
-        leftSound.volume = 1 - factor;
-        centerSound.volume = factor;
+        let factor = mapRange(scrollPosition, 679.6, 749.6, 1, 0);
+        leftSound.volume = factor;
+        centerSound.volume = 1 - factor;
         rightSound.volume = 0;
     } else if (scrollPosition > 749.6 && scrollPosition <= 1289) {
         leftSound.volume = 0;
         centerSound.volume = 1;
         rightSound.volume = 0;
     } else if (scrollPosition > 1289 && scrollPosition <= 1359) {
-        let factor = (scrollPosition - 1289) / (1359 - 1289);
+        let factor = mapRange(scrollPosition, 1289, 1359, 1, 0);
+        centerSound.volume = factor;
+        rightSound.volume = 1 - factor;
         leftSound.volume = 0;
-        centerSound.volume = 1 - factor;
-        rightSound.volume = factor;
     } else if (scrollPosition > 1359 && scrollPosition <= 2039) {
         leftSound.volume = 0;
         centerSound.volume = 0;
@@ -54,7 +62,7 @@ function updateVolume() {
     }
 
     // Log current volumes for debugging
-    console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`);
+    console.log(`leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`);
 }
 
 // Play music function
