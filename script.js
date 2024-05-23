@@ -49,35 +49,64 @@ playMessage.addEventListener('click', () => {
     }
 });
 
+// Crear elementos observables
+const leftSection = document.createElement('div');
+leftSection.style.position = 'absolute';
+leftSection.style.left = '0';
+leftSection.style.top = '0';
+leftSection.style.width = '33.33%';
+leftSection.style.height = '100%';
+
+const centerSection = document.createElement('div');
+centerSection.style.position = 'absolute';
+centerSection.style.left = '33.33%';
+centerSection.style.top = '0';
+centerSection.style.width = '33.33%';
+centerSection.style.height = '100%';
+
+const rightSection = document.createElement('div');
+rightSection.style.position = 'absolute';
+rightSection.style.left = '66.66%';
+rightSection.style.top = '0';
+rightSection.style.width = '33.33%';
+rightSection.style.height = '100%';
+
+image.parentElement.appendChild(leftSection);
+image.parentElement.appendChild(centerSection);
+image.parentElement.appendChild(rightSection);
+
+const observerOptions = {
+    root: container,
+    rootMargin: '0px',
+    threshold: 0.5
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            if (entry.target === leftSection) {
+                leftSound.volume = 1;
+                centerSound.volume = 0;
+                rightSound.volume = 0;
+            } else if (entry.target === centerSection) {
+                leftSound.volume = 0;
+                centerSound.volume = 1;
+                rightSound.volume = 0;
+            } else if (entry.target === rightSection) {
+                leftSound.volume = 0;
+                centerSound.volume = 0;
+                rightSound.volume = 1;
+            }
+        }
+    });
+}, observerOptions);
+
+observer.observe(leftSection);
+observer.observe(centerSection);
+observer.observe(rightSection);
+
 function adjustSoundVolumes() {
-    let scrollPosition = container.scrollLeft;
-    let containerWidth = container.clientWidth;
-    let imageWidth = image.clientWidth;
-
-    // Calcular los tercios
-    let thirdWidth = imageWidth / 3;
-
-    // Calcular la posición central de la vista
-    let viewCenter = scrollPosition + containerWidth / 2;
-
-    console.log(`scrollPosition: ${scrollPosition}, viewCenter: ${viewCenter}, thirdWidth: ${thirdWidth}`);
-
-    // Ajustar volumen del sonido izquierdo
-    if (viewCenter < thirdWidth) {
-        leftSound.volume = 1;
-        centerSound.volume = 0;
-        rightSound.volume = 0;
-    } else if (viewCenter >= thirdWidth && viewCenter < 2 * thirdWidth) {
-        let relativePosition = (viewCenter - thirdWidth) / thirdWidth;
-        leftSound.volume = Math.max(0, 1 - relativePosition);
-        centerSound.volume = Math.max(0, relativePosition);
-        rightSound.volume = 0;
-    } else if (viewCenter >= 2 * thirdWidth) {
-        let relativePosition = (viewCenter - 2 * thirdWidth) / thirdWidth;
-        centerSound.volume = Math.max(0, 1 - relativePosition);
-        rightSound.volume = Math.max(0, relativePosition);
-        leftSound.volume = 0;
-    }
+    // Dejar vacío o usar como sea necesario
 }
 
 container.addEventListener('mousedown', (e) => {
@@ -129,5 +158,3 @@ container.addEventListener('scroll', () => {
         container.scrollLeft = image.clientWidth - container.clientWidth;
     }
 });
-
-container.addEventListener('scroll', adjustSoundVolumes);
