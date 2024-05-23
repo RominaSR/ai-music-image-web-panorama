@@ -5,44 +5,42 @@ let isDragging = false;
 let startX;
 let scrollLeft;
 
-// Música de ambiente
+// Audio elements
 let backgroundMusic = document.getElementById('background-music');
 let leftSound = document.getElementById('left-sound');
 let centerSound = document.getElementById('center-sound');
 let rightSound = document.getElementById('right-sound');
 let playMessage = document.getElementById('play-message');
 
-// Intentar reproducir la música automáticamente
+// Play music function
 function playMusic() {
     backgroundMusic.play().then(() => {
-        playMessage.style.display = 'none'; // Ocultar el mensaje si la reproducción es exitosa
+        playMessage.style.display = 'none';
     }).catch(error => {
         console.log('Reproducción automática bloqueada:', error);
     });
 
-    // Iniciar los otros sonidos
     leftSound.play();
     centerSound.play();
     rightSound.play();
 
-    // Ajustar el volumen de los sonidos según la posición del scroll
     container.addEventListener('scroll', adjustSoundVolumes);
 }
 
+// Center the image on load
 window.addEventListener('load', () => {
     function centerImage() {
         const centerX = (image.clientWidth - container.clientWidth) / 2;
         container.scrollLeft = centerX;
     }
 
-    // Asegurarse de que la imagen esté completamente cargada
     image.addEventListener('load', centerImage);
     if (image.complete) {
         centerImage();
     }
 });
 
-// Permitir que el usuario inicie la música manualmente
+// Play music on user interaction
 playMessage.addEventListener('click', () => {
     playMessage.style.display = 'none';
     if (backgroundMusic.paused) {
@@ -53,16 +51,14 @@ playMessage.addEventListener('click', () => {
 function adjustSoundVolumes() {
     let scrollPosition = container.scrollLeft;
 
-    // Mostrar la posición del desplazamiento
+    // Display scroll position
     scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
-    // Volúmenes iniciales
     let leftVolume = 0;
     let centerVolume = 1;
     let rightVolume = 0;
 
-    // Ajustar volumen del sonido central y izquierdo
     if (scrollPosition <= 679.6) {
         leftVolume = 1;
         centerVolume = 0;
@@ -83,7 +79,6 @@ function adjustSoundVolumes() {
         rightVolume = 1;
     }
 
-    // Aplicar volúmenes y depuración
     console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftVolume}, centerVolume: ${centerVolume}, rightVolume: ${rightVolume}`);
     leftSound.volume = leftVolume;
     centerSound.volume = centerVolume;
@@ -108,7 +103,7 @@ container.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - container.offsetLeft;
-    const walk = (x - startX) * 3; //scroll-fast
+    const walk = (x - startX) * 3;
     container.scrollLeft = scrollLeft - walk;
 });
 
@@ -126,11 +121,10 @@ container.addEventListener('touchmove', (e) => {
     if (!isDragging) return;
     e.preventDefault();
     const x = e.touches[0].pageX - container.offsetLeft;
-    const walk = (x - startX) * 3; //scroll-fast
+    const walk = (x - startX) * 3;
     container.scrollLeft = scrollLeft - walk;
 });
 
-// Prevenir desplazamiento más allá de los bordes
 container.addEventListener('scroll', () => {
     adjustSoundVolumes();
     if (container.scrollLeft <= 0) {
