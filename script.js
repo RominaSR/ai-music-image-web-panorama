@@ -24,44 +24,36 @@ rightSound.volume = 0; // Mute right sound
 function updateVolume() {
     let scrollPosition = container.scrollLeft;
 
-    // Calculate balance level based on scroll position
-    let balanceLevel;
-    if (scrollPosition <= 679.6) {
-        balanceLevel = -1;
-    } else if (scrollPosition <= 749.6) {
-        balanceLevel = (scrollPosition - 679.6) / (749.6 - 679.6) * 2 - 1;
-    } else if (scrollPosition <= 1289) {
-        balanceLevel = 0;
-    } else if (scrollPosition <= 1359) {
-        balanceLevel = (scrollPosition - 1289) / (1359 - 1289);
-    } else {
-        balanceLevel = 1;
-    }
-
-    // Update volume for each audio element
-    let min = 0;
-    let max = audios.length - 1;
-    let avg = Math.abs(min - max) / 2;
-    let midVolume = 0.5;
-
-    audios.forEach((audio, index) => {
-        let diff = index - avg;
-        let volume = (midVolume + (diff * balanceLevel)) * 1; // masterVolume is 1
-
-        if (volume > 1) {
-            volume = 1;
-        } else if (volume < 0) {
-            volume = 0;
-        }
-
-        audio.volume = volume;
-    });
-
     // Display scroll position
     scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
-    // Log current volumes
+    // Update volume for each audio element based on scroll position
+    if (scrollPosition <= 679.6) {
+        leftSound.volume = 1;
+        centerSound.volume = 0;
+        rightSound.volume = 0;
+    } else if (scrollPosition > 679.6 && scrollPosition <= 749.6) {
+        let factor = (scrollPosition - 679.6) / (749.6 - 679.6);
+        leftSound.volume = 1 - factor;
+        centerSound.volume = factor;
+        rightSound.volume = 0;
+    } else if (scrollPosition > 749.6 && scrollPosition <= 1289) {
+        leftSound.volume = 0;
+        centerSound.volume = 1;
+        rightSound.volume = 0;
+    } else if (scrollPosition > 1289 && scrollPosition <= 1359) {
+        let factor = (scrollPosition - 1289) / (1359 - 1289);
+        leftSound.volume = 0;
+        centerSound.volume = 1 - factor;
+        rightSound.volume = factor;
+    } else if (scrollPosition > 1359 && scrollPosition <= 2039) {
+        leftSound.volume = 0;
+        centerSound.volume = 0;
+        rightSound.volume = 1;
+    }
+
+    // Log current volumes for debugging
     console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`);
 }
 
