@@ -55,4 +55,107 @@ function updateVolume() {
         centerSound.volume = factor;
         rightSound.volume = 1 - factor;
         leftSound.volume = 0;
-        console.log(`Crossfading center to right: centerVolume = ${centerSound.volume}, rightVolume = ${rightSound.vo
+        console.log(`Crossfading center to right: centerVolume = ${centerSound.volume}, rightVolume = ${rightSound.vocenterSound.volume}, rightVolume = ${rightSound.volume}`); // Debugging alert
+    } else if (scrollPosition > 1359 && scrollPosition <= 2039) {
+        leftSound.volume = 0;
+        centerSound.volume = 0;
+        rightSound.volume = 1;
+    }
+
+    // Log current volumes for debugging
+    console.log(`leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`);
+    alert(`leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`); // Debugging alert
+}
+
+// Play music function
+function playMusic() {
+    alert('Play music function called'); // Debugging alert
+
+    // Play all sounds initially to avoid blocking issues
+    Promise.all([
+        backgroundMusic.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
+        leftSound.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
+        centerSound.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
+        rightSound.play().catch(error => console.log('Reproducción automática bloqueada:', error))
+    ]).then(() => {
+        playMessage.style.display = 'none';
+        container.addEventListener('scroll', updateVolume);
+        updateVolume(); // Call once to set the initial volumes
+    });
+}
+
+// Center the image on load
+window.addEventListener('load', () => {
+    alert('Window load event triggered'); // Debugging alert
+
+    function centerImage() {
+        const centerX = (image.clientWidth - container.clientWidth) / 2;
+        container.scrollLeft = centerX;
+    }
+
+    image.addEventListener('load', centerImage);
+    if (image.complete) {
+        centerImage();
+    }
+});
+
+// Play music on user interaction
+playMessage.addEventListener('click', () => {
+    alert('Play message clicked'); // Debugging alert
+
+    playMessage.style.display = 'none';
+    if (backgroundMusic.paused) {
+        playMusic();
+    }
+});
+
+container.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.pageX - container.offsetLeft;
+    scrollLeft = container.scrollLeft;
+});
+
+container.addEventListener('mouseleave', () => {
+    isDragging = false;
+});
+
+container.addEventListener('mouseup', () => {
+    isDragging = false;
+});
+
+container.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 3;
+    container.scrollLeft = scrollLeft - walk;
+});
+
+container.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    startX = e.touches[0].pageX - container.offsetLeft;
+    scrollLeft = container.scrollLeft;
+});
+
+container.addEventListener('touchend', () => {
+    isDragging = false;
+});
+
+container.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.touches[0].pageX - container.offsetLeft;
+    const walk = (x - startX) * 3;
+    container.scrollLeft = scrollLeft - walk;
+});
+
+container.addEventListener('scroll', () => {
+    updateVolume();
+    if (container.scrollLeft <= 0) {
+        container.scrollLeft = 0;
+    }
+    if (container.scrollLeft + container.clientWidth >= image.clientWidth) {
+        container.scrollLeft = image.clientWidth - container.clientWidth;
+    }
+});
+
