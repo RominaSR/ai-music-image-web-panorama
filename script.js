@@ -12,6 +12,11 @@ let centerSound = document.getElementById('center-sound');
 let rightSound = document.getElementById('right-sound');
 let playMessage = document.getElementById('play-message');
 
+// Set initial volumes
+leftSound.volume = 0;
+centerSound.volume = 1;
+rightSound.volume = 0;
+
 // Play music function
 function playMusic() {
     backgroundMusic.play().then(() => {
@@ -56,26 +61,22 @@ function adjustSoundVolumes() {
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
     let leftVolume = 0;
-    let centerVolume = 1;
+    let centerVolume = 0;
     let rightVolume = 0;
 
     if (scrollPosition <= 679.6) {
         leftVolume = 1;
-        centerVolume = 0;
     } else if (scrollPosition <= 749.6) {
         let factor = (scrollPosition - 679.6) / (749.6 - 679.6);
         leftVolume = 1 - factor;
         centerVolume = factor;
-    } else if (scrollPosition >= 749.6 && scrollPosition <= 1289) {
+    } else if (scrollPosition <= 1289) {
         centerVolume = 1;
-        leftVolume = 0;
-        rightVolume = 0;
-    } else if (scrollPosition >= 1289 && scrollPosition <= 1359) {
+    } else if (scrollPosition <= 1359) {
         let factor = (scrollPosition - 1289) / (1359 - 1289);
         centerVolume = 1 - factor;
         rightVolume = factor;
     } else if (scrollPosition > 1359) {
-        centerVolume = 0;
         rightVolume = 1;
     }
 
