@@ -1,6 +1,6 @@
 let image = document.getElementById('panoramic-image');
 let container = document.querySelector('.image-container');
-let scrollPositionDisplay = document.getElementById('scroll-position');
+// let scrollPositionDisplay = document.getElementById('scroll-position'); // Remove this line
 let isDragging = false;
 let startX;
 let scrollLeft;
@@ -41,9 +41,9 @@ function mapRange(value, inMin, inMax, outMin, outMax) {
 function updateVolume() {
     let scrollPosition = container.scrollLeft;
 
-    // Display scroll position
-    scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
-    scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
+    // Comment out or remove these lines to hide the scroll position display
+    // scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
+    // scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
     // Update volume for each audio element based on scroll position
     if (scrollPosition <= 679.6) {
