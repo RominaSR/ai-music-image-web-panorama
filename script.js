@@ -55,31 +55,31 @@ function adjustSoundVolumes() {
     let containerWidth = container.clientWidth;
     let imageWidth = image.clientWidth;
 
-    // Calcular los tercios
-    let thirdWidth = imageWidth / 3;
-
-    // Calcular la posición central de la vista
-    let viewCenter = scrollPosition + containerWidth / 2;
-
     // Mostrar la posición del desplazamiento
     scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
-    scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}, View Center: ${viewCenter}`;
+    scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
-    // Ajustar volumen del sonido izquierdo
-    if (viewCenter < thirdWidth) {
-        leftSound.volume = 1;
-        centerSound.volume = 0;
-        rightSound.volume = 0;
-    } else if (viewCenter >= thirdWidth && viewCenter < 2 * thirdWidth) {
-        let relativePosition = (viewCenter - thirdWidth) / thirdWidth;
-        leftSound.volume = Math.max(0, 1 - relativePosition);
-        centerSound.volume = Math.max(0, relativePosition);
-        rightSound.volume = 0;
-    } else if (viewCenter >= 2 * thirdWidth) {
-        let relativePosition = (viewCenter - 2 * thirdWidth) / thirdWidth;
-        centerSound.volume = Math.max(0, 1 - relativePosition);
-        rightSound.volume = Math.max(0, relativePosition);
+    // Ajustar volumen del sonido central y izquierdo
+    if (scrollPosition <= 679.6) {
+        centerSound.volume = (scrollPosition - 679.6) / (749.6 - 679.6);
+        leftSound.volume = (749.6 - scrollPosition) / (749.6 - 679.6);
+    } else if (scrollPosition > 679.6 && scrollPosition < 749.6) {
+        centerSound.volume = 1 - (scrollPosition - 679.6) / (749.6 - 679.6);
+        leftSound.volume = (scrollPosition - 679.6) / (749.6 - 679.6);
+    } else {
+        centerSound.volume = 1;
         leftSound.volume = 0;
+    }
+
+    // Ajustar volumen del sonido central y derecho
+    if (scrollPosition >= 1289 && scrollPosition <= 1359) {
+        centerSound.volume = (1359 - scrollPosition) / (1359 - 1289);
+        rightSound.volume = (scrollPosition - 1289) / (1359 - 1289);
+    } else if (scrollPosition > 1359) {
+        centerSound.volume = 0;
+        rightSound.volume = 1;
+    } else {
+        rightSound.volume = 0;
     }
 }
 
