@@ -12,10 +12,58 @@ let centerSound = document.getElementById('center-sound');
 let rightSound = document.getElementById('right-sound');
 let playMessage = document.getElementById('play-message');
 
+// Store audio elements in an array
+let audios = [leftSound, centerSound, rightSound];
+
 // Set initial volume values
 leftSound.volume = 0; // Mute left sound
 centerSound.volume = 1; // Normal volume for center sound
 rightSound.volume = 0; // Mute right sound
+
+// Function to update volumes based on scroll position
+function updateVolume() {
+    let scrollPosition = container.scrollLeft;
+
+    // Calculate balance level based on scroll position
+    let balanceLevel;
+    if (scrollPosition <= 679.6) {
+        balanceLevel = -1;
+    } else if (scrollPosition <= 749.6) {
+        balanceLevel = (scrollPosition - 679.6) / (749.6 - 679.6) * 2 - 1;
+    } else if (scrollPosition <= 1289) {
+        balanceLevel = 0;
+    } else if (scrollPosition <= 1359) {
+        balanceLevel = (scrollPosition - 1289) / (1359 - 1289);
+    } else {
+        balanceLevel = 1;
+    }
+
+    // Update volume for each audio element
+    let min = 0;
+    let max = audios.length - 1;
+    let avg = Math.abs(min - max) / 2;
+    let midVolume = 0.5;
+
+    audios.forEach((audio, index) => {
+        let diff = index - avg;
+        let volume = (midVolume + (diff * balanceLevel)) * 1; // masterVolume is 1
+
+        if (volume > 1) {
+            volume = 1;
+        } else if (volume < 0) {
+            volume = 0;
+        }
+
+        audio.volume = volume;
+    });
+
+    // Display scroll position
+    scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
+    scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
+
+    // Log current volumes
+    console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`);
+}
 
 // Play music function
 function playMusic() {
@@ -27,8 +75,8 @@ function playMusic() {
         rightSound.play().catch(error => console.log('Reproducción automática bloqueada:', error))
     ]).then(() => {
         playMessage.style.display = 'none';
-        container.addEventListener('scroll', adjustSoundVolumes);
-        adjustSoundVolumes(); // Call once to set the initial volumes
+        container.addEventListener('scroll', updateVolume);
+        updateVolume(); // Call once to set the initial volumes
     });
 }
 
@@ -52,50 +100,6 @@ playMessage.addEventListener('click', () => {
         playMusic();
     }
 });
-
-function adjustSoundVolumes() {
-    let scrollPosition = container.scrollLeft;
-
-    // Display scroll position
-    scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
-    scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
-
-    // Crossfade logic
-    let leftVolume = 0;
-    let centerVolume = 1;
-    let rightVolume = 0;
-
-    if (scrollPosition <= 679.6) {
-        leftVolume = 1;
-        centerVolume = 0;
-        rightVolume = 0;
-    } else if (scrollPosition <= 749.6) {
-        let factor = (scrollPosition - 679.6) / (749.6 - 679.6);
-        leftVolume = 1 - factor;
-        centerVolume = factor;
-        rightVolume = 0;
-    } else if (scrollPosition <= 1289) {
-        leftVolume = 0;
-        centerVolume = 1;
-        rightVolume = 0;
-    } else if (scrollPosition <= 1359) {
-        let factor = (scrollPosition - 1289) / (1359 - 1289);
-        leftVolume = 0;
-        centerVolume = 1 - factor;
-        rightVolume = factor;
-    } else if (scrollPosition > 1359) {
-        leftVolume = 0;
-        centerVolume = 0;
-        rightVolume = 1;
-    }
-
-    leftSound.volume = leftVolume;
-    centerSound.volume = centerVolume;
-    rightSound.volume = rightVolume;
-
-    // Log current volumes
-    console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`);
-}
 
 container.addEventListener('mousedown', (e) => {
     isDragging = true;
@@ -138,7 +142,7 @@ container.addEventListener('touchmove', (e) => {
 });
 
 container.addEventListener('scroll', () => {
-    adjustSoundVolumes();
+    updateVolume();
     if (container.scrollLeft <= 0) {
         container.scrollLeft = 0;
     }
