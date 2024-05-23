@@ -60,6 +60,8 @@ function adjustSoundVolumes() {
     // Calcular la posición central de la vista
     let viewCenter = scrollPosition + containerWidth / 2;
 
+    console.log(`scrollPosition: ${scrollPosition}, viewCenter: ${viewCenter}, thirdWidth: ${thirdWidth}`);
+
     // Ajustar volumen del sonido izquierdo
     if (viewCenter < thirdWidth) {
         leftSound.volume = 1;
@@ -67,13 +69,13 @@ function adjustSoundVolumes() {
         rightSound.volume = 0;
     } else if (viewCenter >= thirdWidth && viewCenter < 2 * thirdWidth) {
         let relativePosition = (viewCenter - thirdWidth) / thirdWidth;
-        leftSound.volume = 1 - relativePosition;
-        centerSound.volume = relativePosition;
+        leftSound.volume = Math.max(0, 1 - relativePosition);
+        centerSound.volume = Math.max(0, relativePosition);
         rightSound.volume = 0;
     } else if (viewCenter >= 2 * thirdWidth) {
         let relativePosition = (viewCenter - 2 * thirdWidth) / thirdWidth;
-        centerSound.volume = 1 - relativePosition;
-        rightSound.volume = relativePosition;
+        centerSound.volume = Math.max(0, 1 - relativePosition);
+        rightSound.volume = Math.max(0, relativePosition);
         leftSound.volume = 0;
     }
 }
