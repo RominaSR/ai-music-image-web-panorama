@@ -12,29 +12,10 @@ let centerSound = document.getElementById('center-sound');
 let rightSound = document.getElementById('right-sound');
 let playMessage = document.getElementById('play-message');
 
-// Create AudioContext
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-// Create GainNodes
-let leftGain = audioContext.createGain();
-let centerGain = audioContext.createGain();
-let rightGain = audioContext.createGain();
-
-// Set initial gain values
-leftGain.gain.value = 0;
-centerGain.gain.value = 1;
-rightGain.gain.value = 0;
-
-// Function to connect audio elements to GainNodes
-function connectAudioElementToGainNode(audioElement, gainNode) {
-    let source = audioContext.createMediaElementSource(audioElement);
-    source.connect(gainNode).connect(audioContext.destination);
-}
-
-// Connect audio elements to GainNodes
-connectAudioElementToGainNode(leftSound, leftGain);
-connectAudioElementToGainNode(centerSound, centerGain);
-connectAudioElementToGainNode(rightSound, rightGain);
+// Set initial volume values
+leftSound.volume = 0; // Mute left sound
+centerSound.volume = 1; // Normal volume for center sound
+rightSound.volume = 0; // Mute right sound
 
 // Play music function
 function playMusic() {
@@ -79,33 +60,33 @@ function adjustSoundVolumes() {
     scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
     scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
 
-    let leftVolume = 0;
-    let centerVolume = 1;
-    let rightVolume = 0;
-
+    // Update volumes based on scroll position
     if (scrollPosition <= 679.6) {
-        leftVolume = 1;
-        centerVolume = 0;
+        leftSound.volume = 1;
+        centerSound.volume = 0;
+        rightSound.volume = 0;
     } else if (scrollPosition <= 749.6) {
         let factor = (scrollPosition - 679.6) / (749.6 - 679.6);
-        leftVolume = 1 - factor;
-        centerVolume = factor;
+        leftSound.volume = 1 - factor;
+        centerSound.volume = factor;
+        rightSound.volume = 0;
     } else if (scrollPosition <= 1289) {
-        centerVolume = 1;
+        leftSound.volume = 0;
+        centerSound.volume = 1;
+        rightSound.volume = 0;
     } else if (scrollPosition <= 1359) {
         let factor = (scrollPosition - 1289) / (1359 - 1289);
-        centerVolume = 1 - factor;
-        rightVolume = factor;
+        leftSound.volume = 0;
+        centerSound.volume = 1 - factor;
+        rightSound.volume = factor;
     } else if (scrollPosition > 1359) {
-        rightVolume = 1;
+        leftSound.volume = 0;
+        centerSound.volume = 0;
+        rightSound.volume = 1;
     }
 
-    // Update gain values
-    leftGain.gain.setValueAtTime(leftVolume, audioContext.currentTime);
-    centerGain.gain.setValueAtTime(centerVolume, audioContext.currentTime);
-    rightGain.gain.setValueAtTime(rightVolume, audioContext.currentTime);
-
-    console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftVolume}, centerVolume: ${centerVolume}, rightVolume: ${rightVolume}`);
+    // Log current volumes
+    console.log(`scrollPosition: ${scrollPosition}, leftVolume: ${leftSound.volume}, centerVolume: ${centerSound.volume}, rightVolume: ${rightSound.volume}`);
 }
 
 container.addEventListener('mousedown', (e) => {
