@@ -5,40 +5,32 @@ let isDragging = false;
 let startX;
 let scrollLeft;
 
-// Create audio context
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-let audioContext = new AudioContext();
-
-// Audio elements
-let backgroundMusic = document.getElementById('background-music');
-let leftSound = document.getElementById('left-sound');
-let centerSound = document.getElementById('center-sound');
-let rightSound = document.getElementById('right-sound');
 let playMessage = document.getElementById('play-message');
 
-// Create media element sources
-let backgroundSource = audioContext.createMediaElementSource(backgroundMusic);
-let leftSource = audioContext.createMediaElementSource(leftSound);
-let centerSource = audioContext.createMediaElementSource(centerSound);
-let rightSource = audioContext.createMediaElementSource(rightSound);
+// Initialize Howl objects for each sound
+let backgroundMusic = new Howl({
+    src: ['https://cdn.glitch.global/4eaf3a50-5bc4-42c1-9d47-a1db4ac88667/Ambiance_musique_app_impressionniste_musique.mp3?v=1716415645214'],
+    loop: true,
+    volume: 1
+});
 
-// Create gain nodes
-let backgroundGain = audioContext.createGain();
-let leftGain = audioContext.createGain();
-let centerGain = audioContext.createGain();
-let rightGain = audioContext.createGain();
+let leftSound = new Howl({
+    src: ['https://cdn.glitch.global/4eaf3a50-5bc4-42c1-9d47-a1db4ac88667/Left_birds_app_impressionniste_musique.mp3?v=1716415536747'],
+    loop: true,
+    volume: 0
+});
 
-// Connect sources to gain nodes
-backgroundSource.connect(backgroundGain).connect(audioContext.destination);
-leftSource.connect(leftGain).connect(audioContext.destination);
-centerSource.connect(centerGain).connect(audioContext.destination);
-rightSource.connect(rightGain).connect(audioContext.destination);
+let centerSound = new Howl({
+    src: ['https://cdn.glitch.global/4eaf3a50-5bc4-42c1-9d47-a1db4ac88667/Center_wind_app_impressionniste_musique.mp3?v=1716415536489'],
+    loop: true,
+    volume: 1
+});
 
-// Set initial gain values
-backgroundGain.gain.value = 1;
-leftGain.gain.value = 0; // Mute left sound
-centerGain.gain.value = 1; // Normal volume for center sound
-rightGain.gain.value = 0; // Mute right sound
+let rightSound = new Howl({
+    src: ['https://cdn.glitch.global/4eaf3a50-5bc4-42c1-9d47-a1db4ac88667/Right_water_app_impressionniste_musique.mp3?v=1716415536988'],
+    loop: true,
+    volume: 0
+});
 
 // Function to map a value from one range to another
 function mapRange(value, inMin, inMax, outMin, outMax) {
@@ -55,48 +47,39 @@ function updateVolume() {
 
     // Update volume for each audio element based on scroll position
     if (scrollPosition <= 679.6) {
-        leftGain.gain.value = 1;
-        centerGain.gain.value = 0;
-        rightGain.gain.value = 0;
+        leftSound.volume(1);
+        centerSound.volume(0);
+        rightSound.volume(0);
     } else if (scrollPosition > 679.6 && scrollPosition <= 749.6) {
         let factor = mapRange(scrollPosition, 679.6, 749.6, 1, 0);
-        leftGain.gain.value = factor;
-        centerGain.gain.value = 1 - factor;
-        rightGain.gain.value = 0;
+        leftSound.volume(factor);
+        centerSound.volume(1 - factor);
+        rightSound.volume(0);
     } else if (scrollPosition > 749.6 && scrollPosition <= 1289) {
-        leftGain.gain.value = 0;
-        centerGain.gain.value = 1;
-        rightGain.gain.value = 0;
+        leftSound.volume(0);
+        centerSound.volume(1);
+        rightSound.volume(0);
     } else if (scrollPosition > 1289 && scrollPosition <= 1359) {
         let factor = mapRange(scrollPosition, 1289, 1359, 1, 0);
-        centerGain.gain.value = factor;
-        rightGain.gain.value = 1 - factor;
-        leftGain.gain.value = 0;
+        centerSound.volume(factor);
+        rightSound.volume(1 - factor);
+        leftSound.volume(0);
     } else if (scrollPosition > 1359 && scrollPosition <= 2039) {
-        leftGain.gain.value = 0;
-        centerGain.gain.value = 0;
-        rightGain.gain.value = 1;
+        leftSound.volume(0);
+        centerSound.volume(0);
+        rightSound.volume(1);
     }
 }
 
 // Play music function
 function playMusic() {
-    // Resume audio context if it's suspended
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
-
-    // Play all sounds initially to avoid blocking issues
-    Promise.all([
-        backgroundMusic.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
-        leftSound.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
-        centerSound.play().catch(error => console.log('Reproducción automática bloqueada:', error)),
-        rightSound.play().catch(error => console.log('Reproducción automática bloqueada:', error))
-    ]).then(() => {
-        playMessage.style.display = 'none';
-        container.addEventListener('scroll', updateVolume);
-        updateVolume(); // Call once to set the initial volumes
-    });
+    backgroundMusic.play();
+    leftSound.play();
+    centerSound.play();
+    rightSound.play();
+    playMessage.style.display = 'none';
+    container.addEventListener('scroll', updateVolume);
+    updateVolume(); // Call once to set the initial volumes
 }
 
 // Center the image on load
