@@ -5,7 +5,7 @@ This project is a **demo developed during my postdoctoral research** to explore 
 
 The application allows users to visualize a **panoramic image**, extended using **artificial intelligence**, and experience a soundscape that dynamically changes based on the part of the image being observed.  
 
-🔗 **Access the experience here:** [Sunny September Extended](https://glitch.com/edit/#!/sunny-september-extended)  
+🔗 **Access the experience here:** [Sunny September Extended](https://sunny-september-extended.glitch.me)  
 
 ## 🎵 Features  
 -  **Panoramic Image Exploration:** Users can navigate freely across the extended painting.  
