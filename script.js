@@ -1,13 +1,13 @@
 let image = document.getElementById('panoramic-image');
 let container = document.querySelector('.image-container');
-// let scrollPositionDisplay = document.getElementById('scroll-position'); // Remove this line
+
 let isDragging = false;
 let startX;
 let scrollLeft;
 
 let playMessage = document.getElementById('play-message');
 
-// Initialize Howl objects for each sound
+// Initialize objects for each sound
 let backgroundMusic = new Howl({
     src: ['https://cdn.glitch.global/4eaf3a50-5bc4-42c1-9d47-a1db4ac88667/Ambiance_musique_app_impressionniste_musique.mp3?v=1716415645214'],
     loop: true,
@@ -32,7 +32,7 @@ let rightSound = new Howl({
     volume: 0
 });
 
-// Function to map a value from one range to another
+// Function to map values from one range to another
 function mapRange(value, inMin, inMax, outMin, outMax) {
     return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
@@ -41,10 +41,7 @@ function mapRange(value, inMin, inMax, outMin, outMax) {
 function updateVolume() {
     let scrollPosition = container.scrollLeft;
 
-    // Comment out or remove these lines to hide the scroll position display
-    // scrollPositionDisplay.style.left = `${scrollPosition + 10}px`;
-    // scrollPositionDisplay.textContent = `Scroll Position: ${scrollPosition}`;
-
+   
     // Update volume for each audio element based on scroll position
     if (scrollPosition <= 679.6) {
         leftSound.volume(1);
