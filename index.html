@@ -1,21 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panoramic Image Viewer</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#142c2d">
+  <meta name="description" content="Entrez dans Sunny September : un panorama impressionniste à 360° et une composition sonore qui accompagne votre regard. Une expérience de Romina Soledad Romay.">
+  <title>Sunny September — Romina Soledad Romay</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="image-container">
-        <img src="https://cdn.glitch.global/1f4974dd-91a5-42c3-81d9-08f002eea6da/image_app_Sunny_September.jpg?v=1716411655241" alt="Panoramic Image" id="panoramic-image">
-        <!-- Remove this line to hide the scroll position display -->
-        <!-- <div id="scroll-position" style="position: absolute; top: 10px; color: white; background: rgba(0, 0, 0, 0.5); padding: 5px; border-radius: 5px;">0</div> -->
+  <canvas id="panorama" tabindex="0" aria-label="Paysage à 360 degrés. Faites glisser ou utilisez les flèches du clavier pour regarder autour de vous."></canvas>
+  <header class="masthead">
+    <a class="wordmark" href="#" id="home">Sunny September<span>Un paysage à écouter · 360°</span></a>
+    <button class="round" id="about-button" aria-label="À propos de l’œuvre">i</button>
+  </header>
+  <main class="entrance" id="entrance">
+    <div class="intro">
+      <h1>Entrez dans<br><em>le paysage.</em></h1>
+      <p>Un tableau, un horizon.<br>La musique accompagne votre regard.</p>
+      <button class="primary" id="start" disabled>Chargement du paysage…</button>
+      <p class="small">Au casque, prenez le temps d’explorer.</p>
     </div>
-    <div id="play-message" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px; text-align: center; cursor: pointer;">
-        Commencez votre expérience
-    </div>
-    <script src="script.js"></script>
+  </main>
+  <p id="notice" class="notice" role="status" aria-live="polite"></p>
+  <div class="experience" id="experience" hidden>
+    <div class="sound-label"><span id="zone">Le vent</span><span class="hint">Glissez pour explorer · Molette pour zoomer</span></div>
+    <footer class="controls" aria-label="Commandes de l’expérience">
+      <button id="play" aria-label="Mettre en pause">Pause</button>
+      <label class="composition">Musique <select id="composition"><option value="musicA">A</option><option value="musicB">B</option></select></label>
+      <label class="volume">Volume <input id="volume" type="range" min="0" max="1" step="0.01" value="0.65"></label>
+      <button id="tour" aria-pressed="false">Promenade</button>
+      <button id="recenter">Recentrer</button>
+      <button id="fullscreen" aria-label="Afficher en plein écran">Plein écran</button>
+    </footer>
+  </div>
+  <dialog id="about">
+    <button class="close" id="close-about" aria-label="Fermer">×</button>
+    <p class="eyebrow">Sunny September</p>
+    <h2>Une peinture à habiter.</h2>
+    <p>Explorez un paysage inspiré de <em>Sunny September</em> (1913), de Helen McNicoll, étendu par intelligence artificielle. Les oiseaux, le vent et l’eau se mêlent à la musique selon la direction de votre regard.</p>
+    <p class="small">Clavier : flèches pour regarder, + et − pour zoomer, touche Espace pour mettre en pause. Le panorama est une image projetée sur une sphère : vous pouvez regarder autour de vous depuis un point fixe.</p>
+  </dialog>
+  <noscript>Activez JavaScript pour explorer le panorama à 360°.</noscript>
 </body>
 </html>

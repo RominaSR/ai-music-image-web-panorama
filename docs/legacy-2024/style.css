@@ -1,0 +1,34 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.image-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    touch-action: none;
+}
+
+#panoramic-image {
+    position: relative;
+    width: auto;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+}
+
+#play-message {
+    cursor: pointer;
+}
