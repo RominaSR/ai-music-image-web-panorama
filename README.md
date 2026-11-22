@@ -1,12 +1,12 @@
 # Sunny September
 
-### An immersive painting and sound experience by Romina Soledad Romay
+### An immersive painting and sound experience
 
 ![AI-extended landscape based on Helen McNicoll’s Sunny September](assets/panorama.jpg)
 
 Explore an Impressionist landscape from inside a **360° sphere**. As you turn toward the trees, grasses or water, birds, wind and waves blend into the music. Switch between two recovered musical tracks and discover a different reading of the same landscape.
 
-Originally developed during my postdoctoral research, this project explores the relationship between music, AI-extended paintings and interactive multisensory experiences. The visual starting point is *Sunny September* (1913), by **Helen McNicoll**.
+Originally developed during my postdoctoral research, this project explores the relationship between music, AI-extended paintings and interactive experiences. The visual starting point is *Sunny September* (1913), by **Helen McNicoll**.
 
 ## The experience
 
@@ -55,6 +55,6 @@ The 7680 × 3840 source image is exported as a 4096 × 2048 JPEG for the web. Fi
 
 ## Credits and media
 
-**Concept and project:** Romina Soledad Romay. **Source painting:** Helen McNicoll, *Sunny September*, 1913, Collection Pierre Lassonde. **Panorama:** recovered AI-extended image from the author’s Mattercraft project. **Audio:** five recovered exports supplied with the project.
+**Project:** CRIUGM Montréal. **Source painting:** Helen McNicoll, *Sunny September*, 1913, Collection Pierre Lassonde. **Panorama:** recovered AI-extended image from the 2023's project. **Audio:** five recovered exports supplied with the project.
 
 The existing [MIT license](LICENSE) covers the code. Artwork, audio recordings and other third-party materials retain their respective rights; their inclusion does not grant a separate reuse license. The recovered GLB objects and additional recordings are not part of this sphere edition.
